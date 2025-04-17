@@ -1,141 +1,122 @@
-# Example Telegram Bot
+# Тестовая задача для Technesis
 
-Welcome to the **Example Telegram Bot**! This is a fully ready-to-use template for building a Telegram bot with **Python**, **aiogram**, **PostgreSQL**, and **SQLAlchemy**. It includes all the basic features you need to create and manage a bot with minimal setup. Just clone the repository, configure the database, and you're good to go.
+Телеграм-бот для сбора данных с сайтов и расчета средних цен на товары.
 
-This template is designed to help you focus on building out your bot's features without having to worry about the underlying setup. It's the perfect starting point for your Telegram bot project.
+## Возможности
 
-## Features
+- Загрузка Excel-файлов с данными для парсинга сайтов
+- Хранение информации о сайтах в базе данных PostgreSQL
 
-- **User Registration**: The bot greets new users, collects their information (name, age), and stores it in the PostgreSQL database.
-- **Admin Panel**: Easily manage dynamic and static buttons, update the welcome message, and access user details through the admin panel.
-- **PostgreSQL Integration**: The project integrates PostgreSQL for database storage, using **SQLAlchemy** as the ORM to simplify database operations.
-- **Poetry for Dependency Management**: Use **Poetry** to manage dependencies and keep everything tidy.
-- **State Machine Support**: The bot supports finite state machines (FSM), making it easier to manage multi-step interactions like adding/removing buttons or handling registration.
-- **Customizable Welcome Message**: Admins can modify the welcome message sent to new users, and this is saved for future use.
 
-## Requirements
+## Требования
 
 - Python 3.12+
-- PostgreSQL (Make sure you have a PostgreSQL instance running)
-- Poetry (for managing dependencies)
-- Docker (optional, if you want to run the bot in a containerized environment)
+- Токен Telegram бота ([@BotFather](https://t.me/BotFather))
 
-## Getting Started
+## Установка
 
-### 1. Clone the Repository
-
+1. Клонируйте репозиторий
+2. Установите необходимые пакеты:
 ```bash
-git clone https://github.com/yarolys/ExampleTelegramBot.git
-cd ExampleTelegramBot
-```
-
-### 2. Install Dependencies
-
-Make sure **Poetry** is installed. If it's not, you can follow the instructions on the [Poetry website](https://python-poetry.org/docs/#installation).
-
-Then, run:
-
-```bash
+pip install poetry
 poetry install
+poetry shell
 ```
 
-This will install all the required dependencies listed in the `pyproject.toml` file.
+3. Создайте файл `.env` (подробнее в .env example):
 
-### 3. Set Up PostgreSQL
 
-Ensure that you have a **PostgreSQL** instance running. Create a new database for your bot, and update the `DATABASE_URL` in `src/config.py` with your connection details:
+## Использование
 
-```python
-DATABASE_URL = "postgresql://username:password@localhost/dbname"
-```
-
-Replace `username`, `password`, and `dbname` with your actual database credentials.
-
-### 4. Database Migrations (Optional)
-
-If you're setting up the database for the first time or need to run migrations, you can do so using **Alembic**.
-
-1. First, ensure that **Alembic** is installed by running:
-
-    ```bash
-    poetry add alembic
-    ```
-
-2. To run migrations, use the following command:
-
-    ```bash
-    poetry run alembic upgrade head
-    ```
-
-This will apply the latest migrations to your PostgreSQL database.
-
-### 5. Configure Your Telegram Bot
-
-Create a new bot with [BotFather](https://core.telegram.org/bots#botfather) on Telegram. Once created, copy the token and update it in `src/config.py`:
-
-```python
-API_TOKEN = "your-telegram-bot-token"
-```
-
-### 6. Run the Bot
-
-Once everything is configured, you can run the bot using:
-
+1. Запустите бота:
 ```bash
-poetry run python src/run.py
+python run.py
 ```
 
-### 7. Optional: Docker Setup
+2. В Telegram отправьте команду `/start`
 
-If you want to run the bot in a Docker container, you can use the provided Docker setup.
+3. Загрузите Excel-файл, используя кнопку "Загрузить файл". Excel-файл должен содержать следующие столбцы:
+   - `title`: Название сайта/магазина
+   - `url`: URL страницы товара
+   - `xpath`: XPath для элемента с ценой
 
-1. Build and start the Docker containers:
 
-    ```bash
-    docker-compose up --build
-    ```
 
-2. The bot will now be running in a Docker container, and you can interact with it on Telegram.
+## Структура проекта
 
-## Project Structure
-
-Here’s a breakdown of the key files and directories:
-
-```bash
-.
-├── alembic.ini              # Alembic configuration for database migrations
-├── docker-compose.yaml      # Docker Compose file for container setup
-├── dockerfile               # Dockerfile for building the bot's image
-├── logs/                    # Logs directory (contains bot logs)
-├── poetry.lock              # Poetry lock file to ensure consistent dependencies
-├── pyproject.toml           # Poetry project configuration
-├── run.py                   # Main entry point for running the bot
-└── src/
-    ├── config.py            # Bot configuration file (API token, DB settings, etc.)
-    ├── database/            # Database-related files (models, connection, migrations)
-    │   ├── connection.py    # PostgreSQL database connection
-    │   ├── models/          # Database models (user, buttons, etc.)
-    │   ├── migrations/      # Alembic migration scripts
-    │   └── __init__.py      # Initialization for the database module
-    ├── handlers/            # Handlers for bot commands and interactions
-    │   ├── start.py         # Bot start handler (greets users, etc.)
-    ├── schemas.py           # Schemas for data validation
-    └── utils/               # Utility scripts (filters, keyboards, etc.)
-        ├── filter.py        # Filtering logic
-        └── keyboard/        # Keyboard configuration (admin, user, etc.)
-            ├── admin.py     # Admin panel keyboard setup
-            └── user.py      # User-related keyboard setup
+```
+├── alembic.ini
+├── docker-compose.yaml
+├── dockerfile
+├── logs
+│   └── log.log
+├── pgdata
+├── poetry.lock
+├── pyproject.toml
+├── README.md
+├── run.py
+└── src
+    ├── config.py
+    ├── database
+    │   ├── connection.py
+    │   ├── __init__.py
+    │   ├── migrations
+    │   │   ├── env.py
+    │   │   ├── __pycache__
+    │   │   │   └── env.cpython-312.pyc
+    │   │   ├── README
+    │   │   ├── script.py.mako
+    │   │   └── versions
+    │   │       ├── 54984f944968_add_column_for_currency.py
+    │   │       ├── 8b81d3a4ec26_create_table.py
+    │   │       └── __pycache__
+    │   │           ├── 54984f944968_add_column_for_currency.cpython-312.pyc
+    │   │           └── 8b81d3a4ec26_create_table.cpython-312.pyc
+    │   ├── models
+    │   │   ├── __pycache__
+    │   │   │   ├── example_database_module.cpython-312.pyc
+    │   │   │   └── website.cpython-312.pyc
+    │   │   └── website.py
+    │   └── __pycache__
+    │       ├── connection.cpython-312.pyc
+    │       └── __init__.cpython-312.pyc
+    ├── handlers
+    │   ├── __init__.py
+    │   ├── __pycache__
+    │   │   ├── __init__.cpython-312.pyc
+    │   │   └── start.cpython-312.pyc
+    │   ├── start.py
+    │   └── user_panel
+    │       ├── __pycache__
+    │       │   └── user_panel.cpython-312.pyc
+    │       └── user_panel.py
+    ├── __pycache__
+    │   └── config.cpython-312.pyc
+    ├── schemas.py
+    └── utils
+        ├── filter.py
+        └── keyboard
+            ├── admin.py
+            ├── __pycache__
+            │   └── user.cpython-312.pyc
+            └── user.py
 ```
 
-## Customization
+## Зависимости
 
-You can easily customize the following:
+(В pyproject.toml)
 
-- **Welcome Message**: Update the default welcome message via the admin panel.
-- **Buttons**: Add, remove, or update buttons through the admin panel.
-- **Bot Commands and Handlers**: Modify the behavior of the bot by editing the handler files under `src/handlers/`.
-- **Database Models**: Modify the database models to store additional information about users or settings.
 
-## Contribution
+## Формат Excel-файла
 
-Feel free to contribute by opening issues or submitting pull requests if you have improvements or fixes.
+Excel-файл должен содержать следующие обязательные столбцы:
+- `title`: Название магазина или сайта
+- `url`: Полный URL страницы с товаром
+- `xpath`: Путь XPath к элементу, содержащему цену
+
+Пример содержимого файла:
+| title | url | xpath |
+|-------|-----|-------|
+| Книга | https://books.toscrape.com/catalogue/a-light-in-the-attic_1000/index.html | //p[@class="price_color"]/text() |
+
+ну и т.п.
